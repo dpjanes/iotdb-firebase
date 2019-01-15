@@ -1,5 +1,5 @@
 /*
- *  db/index.js
+ *  db/read.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,11 +22,40 @@
 
 "use strict"
 
-module.exports = Object.assign(
-    {},
-    require("./initialize"),
-    require("./write"),
-    require("./read"),
-    require("./list"),
-    {}
-)
+const _ = require("iotdb-helpers")
+
+const logger = require("../logger")(__filename)
+
+/**
+ */
+const read = _.promise((self, done) => {
+    logger.trace({
+        method: read.method,
+    }, "called")
+
+    _.promise.validate(self, read)
+
+    const ref = self.firebase.db.ref(self.path)
+    ref.once("value", snapshot => {
+        self.json = snapshot.val()
+
+        done(null, self)
+    })
+})
+
+read.method = "db.read"
+read.description = `Read a JSON value`
+read.requires = {
+    firebase: {
+        db: _.is.Object,
+    },
+    path: _.is.String,
+}
+read.produces = {
+    json: _.is.String,
+}
+
+/**
+ *  API
+ */
+exports.read = read

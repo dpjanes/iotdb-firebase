@@ -1,5 +1,5 @@
 /*
- *  db/index.js
+ *  samples/db_read.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,11 +22,28 @@
 
 "use strict"
 
-module.exports = Object.assign(
-    {},
-    require("./initialize"),
-    require("./write"),
-    require("./read"),
-    require("./list"),
-    {}
-)
+const _ = require("iotdb-helpers")
+const firebase = require("..")
+
+_.promise({
+    firebased: {
+        service_account: require("./service-account.json")
+    }
+})
+    .then(firebase.admin.initialize)
+    .then(firebase.admin.db)
+    .add({
+        path: "/",
+        // path: "/hello/xxx",
+    })
+    .then(firebase.db.read)
+    .make(sd => {
+        console.log("+", sd.json)
+        process.nextTick(() => process.exit())
+    })
+    .catch(error => {
+        console.log("#", _.error.message(error))
+
+        delete error.self
+        console.log(error)
+    })
