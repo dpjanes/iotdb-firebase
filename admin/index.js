@@ -1,5 +1,5 @@
 /*
- *  index.js
+ *  admin/index.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,5 +22,9 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
+module.exports = Object.assign(
+    {},
+    require("./initialize"),
+    require("./db"),
+    {}
+)

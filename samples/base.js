@@ -1,5 +1,5 @@
 /*
- *  index.js
+ *  samples/base.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,5 +22,27 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
+const firebase_admin = require("firebase-admin");
+
+const account = require("./service-account.json")
+
+firebase_admin.initializeApp({
+    credential: firebase_admin.credential.cert(account),
+    databaseURL: `https://${account.project_id}.firebaseio.com`,
+})
+
+const db = firebase_admin.database();
+const root_ref = db.ref("/hello/xxx")
+
+// root_ref.update({
+// root_ref.push({
+root_ref.set({
+    first: "John",
+    last: "Janes",
+})
+    .then(() => {
+        console.log("DONE")
+    })
+    .catch(error => {
+        console.log("ERROR", error)
+    })

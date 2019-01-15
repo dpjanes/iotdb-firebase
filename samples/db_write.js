@@ -1,5 +1,5 @@
 /*
- *  index.js
+ *  samples/db_1.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,5 +22,27 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
+const _ = require("iotdb-helpers")
+const firebase = require("..")
+
+_.promise({
+    firebased: {
+        service_account: require("./service-account.json")
+    }
+})
+    .then(firebase.admin.initialize)
+    .then(firebase.admin.db)
+    .add({
+        path: "/hello/xxx",
+        json: {
+            first: "David",
+            last: "Janes",
+        },
+    })
+    .then(firebase.db.write)
+    .make(sd => {
+        console.log("+", "done")
+    })
+    .catch(error => {
+        console.log("#", _.error.message(error))
+    })

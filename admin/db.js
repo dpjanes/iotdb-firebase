@@ -1,5 +1,5 @@
 /*
- *  index.js
+ *  admin/db.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,5 +22,31 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
+const _ = require("iotdb-helpers")
+
+const logger = require("../logger")(__filename)
+
+/**
+ */
+const db = _.promise((self, done) => {
+    logger.trace({
+        method: db.method,
+    }, "called")
+
+    _.promise(self)
+        .validate(db)
+        .end(done, self)
+})
+
+db.method = "db"
+db.description = ``
+db.requires = {
+    firebase: {
+        service_account: _.is.Dictionary,
+    },
+}
+
+/**
+ *  API
+ */
+exports.db = db
