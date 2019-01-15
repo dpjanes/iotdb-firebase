@@ -1,5 +1,5 @@
 /*
- *  admin/initialize.js
+ *  db/initialize.js
  *
  *  David Janes
  *  IOTDB.org
@@ -48,7 +48,7 @@ const initialize = _.promise((self, done) => {
     })
 })
 
-initialize.method = "admin.initialize"
+initialize.method = "db.initialize"
 initialize.requires = {
     firebased: _.is.Dictionary,
 }

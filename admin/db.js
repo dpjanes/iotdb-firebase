@@ -38,10 +38,10 @@ const db = _.promise((self, done) => {
         .end(done, self)
 })
 
-db.method = "db"
+db.method = "admin.db"
 db.description = ``
 db.requires = {
-    firebase: {
+    firebased: {
         service_account: _.is.Dictionary,
     },
 }

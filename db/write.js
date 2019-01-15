@@ -1,5 +1,5 @@
 /*
- *  admin/initialize.js
+ *  db/write.js
  *
  *  David Janes
  *  IOTDB.org
@@ -27,33 +27,25 @@ const _ = require("iotdb-helpers")
 const logger = require("../logger")(__filename)
 
 /**
- *  Requires: self.firebased
- *  Produces: self.firebase
  */
-const initialize = _.promise((self, done) => {
-    _.promise.validate(self, initialize)
-
+const write = _.promise((self, done) => {
     logger.trace({
-        method: initialize.method,
+        method: write.method,
     }, "called")
 
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
-
-        self.firebase = client;
-
-        done(null, self)
-    })
+    _.promise(self)
+        .validate(write)
+        .end(done, self)
 })
 
-initialize.method = "admin.initialize"
-initialize.requires = {
-    firebased: _.is.Dictionary,
+write.method = "db.write"
+write.description = ``
+write.requires = {
+    firebase: {
+    },
 }
 
 /**
  *  API
  */
-exports.initialize = initialize
+exports.write = write

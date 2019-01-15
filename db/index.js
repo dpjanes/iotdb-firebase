@@ -1,5 +1,5 @@
 /*
- *  admin/initialize.js
+ *  db/index.js
  *
  *  David Janes
  *  IOTDB.org
@@ -22,38 +22,9 @@
 
 "use strict"
 
-const _ = require("iotdb-helpers")
-
-const logger = require("../logger")(__filename)
-
-/**
- *  Requires: self.firebased
- *  Produces: self.firebase
- */
-const initialize = _.promise((self, done) => {
-    _.promise.validate(self, initialize)
-
-    logger.trace({
-        method: initialize.method,
-    }, "called")
-
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
-
-        self.firebase = client;
-
-        done(null, self)
-    })
-})
-
-initialize.method = "admin.initialize"
-initialize.requires = {
-    firebased: _.is.Dictionary,
-}
-
-/**
- *  API
- */
-exports.initialize = initialize
+module.exports = Object.assign(
+    {},
+    require("./initialize"),
+    require("./db"),
+    {}
+)
