@@ -24,3 +24,4 @@
 
 module.exports = require("./lib")
 module.exports.admin = require("./admin")
+module.exports.db = require("./db")

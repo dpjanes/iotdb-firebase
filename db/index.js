@@ -25,6 +25,6 @@
 module.exports = Object.assign(
     {},
     require("./initialize"),
-    require("./db"),
+    require("./write"),
     {}
 )

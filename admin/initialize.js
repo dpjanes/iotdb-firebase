@@ -24,6 +24,8 @@
 
 const _ = require("iotdb-helpers")
 
+const firebase_admin = require("firebase-admin")
+
 const logger = require("../logger")(__filename)
 
 /**
@@ -37,20 +39,22 @@ const initialize = _.promise((self, done) => {
         method: initialize.method,
     }, "called")
 
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
+    const account = self.firebased.service_account
 
-        self.firebase = client;
-
-        done(null, self)
+    firebase_admin.initializeApp({
+        credential: firebase_admin.credential.cert(account),
+        databaseURL: `https://${account.project_id}.firebaseio.com`,
     })
+
+    self.firebase = {}
+    done(null, self)
 })
 
 initialize.method = "admin.initialize"
 initialize.requires = {
-    firebased: _.is.Dictionary,
+    firebased: {
+        service_account: _.is.Dictionary,
+    },
 }
 
 /**

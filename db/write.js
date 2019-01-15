@@ -33,16 +33,22 @@ const write = _.promise((self, done) => {
         method: write.method,
     }, "called")
 
-    _.promise(self)
-        .validate(write)
-        .end(done, self)
+    _.promise.validate(self, write)
+
+    const ref = self.firebase.db.ref(self.path)
+    ref.set(self.json)
+        .then(() => done(null, self))
+        .catch(done)
 })
 
 write.method = "db.write"
 write.description = ``
 write.requires = {
     firebase: {
+        db: _.is.Object,
     },
+    path: _.is.String,
+    json: _.is.JSON,
 }
 
 /**

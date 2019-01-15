@@ -37,12 +37,17 @@ _.promise({
         json: {
             first: "David",
             last: "Janes",
+            timestamp: _.timestamp.make(),
         },
     })
     .then(firebase.db.write)
     .make(sd => {
         console.log("+", "done")
+        process.nextTick(() => process.exit())
     })
     .catch(error => {
         console.log("#", _.error.message(error))
+
+        delete error.self
+        console.log(error)
     })

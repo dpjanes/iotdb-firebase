@@ -24,6 +24,8 @@
 
 const _ = require("iotdb-helpers")
 
+const firebase_admin = require("firebase-admin")
+
 const logger = require("../logger")(__filename)
 
 /**
@@ -35,15 +37,17 @@ const db = _.promise((self, done) => {
 
     _.promise(self)
         .validate(db)
-        .end(done, self)
+        .make(sd => {
+            sd.firebase = _.clone(sd.firebase)
+            sd.firebase.db = firebase_admin.database();
+        })
+        .end(done, self, "firebase")
 })
 
 db.method = "admin.db"
 db.description = ``
 db.requires = {
-    firebased: {
-        service_account: _.is.Dictionary,
-    },
+    firebase: _.is.Dictionary,
 }
 
 /**
