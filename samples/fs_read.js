@@ -1,9 +1,9 @@
 /*
- *  index.js
+ *  samples/fs_read.js
  *
  *  David Janes
  *  IOTDB.org
- *  2019-01-14
+ *  2019-01-16
  *
  *  Copyright (2013-2019) David P. Janes
  *
@@ -22,7 +22,27 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
-module.exports.db = require("./db")
-module.exports.firestore = require("./firestore")
+const _ = require("iotdb-helpers")
+const firebase = require("..")
+
+_.promise({
+    firebased: {
+        service_account: require("./service-account.json")
+    }
+})
+    .then(firebase.admin.initialize)
+    .then(firebase.admin.firestore)
+    .add({
+        path: "/hello/xxx",
+    })
+    .then(firebase.firestore.read)
+    .make(sd => {
+        console.log("+", sd.json)
+        process.nextTick(() => process.exit())
+    })
+    .catch(error => {
+        console.log("#", _.error.message(error))
+
+        delete error.self
+        console.log(error)
+    })

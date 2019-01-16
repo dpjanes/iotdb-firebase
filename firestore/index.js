@@ -1,9 +1,9 @@
 /*
- *  index.js
+ *  firestore/index.js
  *
  *  David Janes
  *  IOTDB.org
- *  2019-01-14
+ *  2019-01-16
  *
  *  Copyright (2013-2019) David P. Janes
  *
@@ -22,7 +22,11 @@
 
 "use strict"
 
-module.exports = require("./lib")
-module.exports.admin = require("./admin")
-module.exports.db = require("./db")
-module.exports.firestore = require("./firestore")
+module.exports = Object.assign(
+    {},
+    require("./initialize"),
+    require("./write"),
+    require("./read"),
+    require("./list"),
+    {}
+)

@@ -1,9 +1,9 @@
 /*
- *  db/initialize.js
+ *  firestore/initialize.js
  *
  *  David Janes
  *  IOTDB.org
- *  2019-01-14
+ *  2019-01-16
  *
  *  Copyright (2013-2019) David P. Janes
  *
@@ -50,9 +50,8 @@ const initialize = _.promise((self, done) => {
     */
 })
 
-initialize.method = "db.initialize"
+initialize.method = "firestore.initialize"
 initialize.requires = {
-    // firebased: _.is.Dictionary,
 }
 
 /**

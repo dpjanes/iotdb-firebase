@@ -1,9 +1,9 @@
 /*
- *  db/initialize.js
+ *  admin/firestore.js
  *
  *  David Janes
  *  IOTDB.org
- *  2019-01-14
+ *  2019-01-16
  *
  *  Copyright (2013-2019) David P. Janes
  *
@@ -24,38 +24,36 @@
 
 const _ = require("iotdb-helpers")
 
+const firebase_admin = require("firebase-admin")
+
 const logger = require("../logger")(__filename)
 
 /**
- *  Requires: self.firebased
- *  Produces: self.firebase
  */
-const initialize = _.promise((self, done) => {
-    _.promise.validate(self, initialize)
-
+const firestore = _.promise((self, done) => {
     logger.trace({
-        method: initialize.method,
+        method: firestore.method,
     }, "called")
 
-    /*
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
-
-        self.firebase = client;
-
-        done(null, self)
-    })
-    */
+    _.promise(self)
+        .validate(firestore)
+        .make(sd => {
+            sd.firebase = _.clone(sd.firebase)
+            sd.firebase.firestore = firebase_admin.firestore()
+            sd.firebase.firestore.settings({
+                timestampsInSnapshots: true
+            })
+        })
+        .end(done, self, "firebase")
 })
 
-initialize.method = "db.initialize"
-initialize.requires = {
-    // firebased: _.is.Dictionary,
+firestore.method = "admin.firestore"
+firestore.description = ``
+firestore.requires = {
+    firebase: _.is.Dictionary,
 }
 
 /**
  *  API
  */
-exports.initialize = initialize
+exports.firestore = firestore

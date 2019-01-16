@@ -1,5 +1,5 @@
 /*
- *  db/initialize.js
+ *  samples/fs_write.js
  *
  *  David Janes
  *  IOTDB.org
@@ -23,39 +23,31 @@
 "use strict"
 
 const _ = require("iotdb-helpers")
+const firebase = require("..")
 
-const logger = require("../logger")(__filename)
-
-/**
- *  Requires: self.firebased
- *  Produces: self.firebase
- */
-const initialize = _.promise((self, done) => {
-    _.promise.validate(self, initialize)
-
-    logger.trace({
-        method: initialize.method,
-    }, "called")
-
-    /*
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
-
-        self.firebase = client;
-
-        done(null, self)
-    })
-    */
+_.promise({
+    firebased: {
+        service_account: require("./service-account.json")
+    }
 })
+    .then(firebase.admin.initialize)
+    .then(firebase.admin.firestore)
+    .add({
+        path: "/hello/xxx",
+        json: {
+            first: "David",
+            last: "Janes",
+            timestamp: _.timestamp.make(),
+        },
+    })
+    .then(firebase.firestore.write)
+    .make(sd => {
+        console.log("+", "done")
+        process.nextTick(() => process.exit())
+    })
+    .catch(error => {
+        console.log("#", _.error.message(error))
 
-initialize.method = "db.initialize"
-initialize.requires = {
-    // firebased: _.is.Dictionary,
-}
-
-/**
- *  API
- */
-exports.initialize = initialize
+        delete error.self
+        console.log(error)
+    })

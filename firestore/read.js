@@ -1,9 +1,9 @@
 /*
- *  db/initialize.js
+ *  firestore/read.js
  *
  *  David Janes
  *  IOTDB.org
- *  2019-01-14
+ *  2019-01-16
  *
  *  Copyright (2013-2019) David P. Janes
  *
@@ -27,35 +27,37 @@ const _ = require("iotdb-helpers")
 const logger = require("../logger")(__filename)
 
 /**
- *  Requires: self.firebased
- *  Produces: self.firebase
  */
-const initialize = _.promise((self, done) => {
-    _.promise.validate(self, initialize)
-
+const read = _.promise((self, done) => {
     logger.trace({
-        method: initialize.method,
+        method: read.method,
     }, "called")
 
-    /*
-    firebase.createConnection(self.firebased, (error, client) => {
-        if (error) {
-            return done(error)
-        }
+    _.promise.validate(self, read)
 
-        self.firebase = client;
-
-        done(null, self)
-    })
-    */
+    const document = self.firebase.firestore.doc(self.path)
+    document
+        .get()
+        .then(document => {
+            self.json = document
+            done(null, self)
+        })
+        .catch(done)
 })
 
-initialize.method = "db.initialize"
-initialize.requires = {
-    // firebased: _.is.Dictionary,
+read.method = "firestore.read"
+read.description = `Read a JSON value`
+read.requires = {
+    firebase: {
+        firestore: _.is.Object,
+    },
+    path: _.is.String,
+}
+read.produces = {
+    json: _.is.String,
 }
 
 /**
  *  API
  */
-exports.initialize = initialize
+exports.read = read
