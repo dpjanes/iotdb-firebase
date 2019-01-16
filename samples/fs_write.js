@@ -33,7 +33,8 @@ _.promise({
     .then(firebase.admin.initialize)
     .then(firebase.admin.firestore)
     .add({
-        path: "/hello/xxx",
+        // path: "/hello/xxx",
+        path: "/abc",
         json: {
             first: "David",
             last: "Janes",
